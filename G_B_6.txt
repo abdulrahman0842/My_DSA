@@ -1,0 +1,196 @@
+//Beginning with an empty binary search tree, Construct binary search tree by inserting the
+values in the order given. After constructing a binary tree -
+i. Insert new node
+ii. Find number of nodes in longest path from root
+iii. Minimum data value found in the tree
+iv. Change a tree so that the roles of the left and right pointers are swapped at every
+node
+v. Search a value//
+
+
+
+#include<iostream>
+#include<math.h>
+using namespace std;
+
+struct Bstnode
+{
+ int data;
+ Bstnode *left = NULL;
+ Bstnode *right = NULL;
+ 
+};
+
+class Btree
+{
+ 
+  int n;
+  int x;
+  int flag;
+  
+public:
+  Bstnode * root;
+ Btree()
+ {
+  root = NULL;
+ }
+ 
+ Bstnode *GetNewNode(int in_data)
+ {
+  Bstnode * ptr = new Bstnode();
+  ptr->data = in_data;
+  ptr->left = NULL;
+  ptr->right = NULL;
+  return ptr;
+ }
+ 
+ Bstnode *insert( Bstnode *temp , int in_data)
+ {
+  if( temp == NULL )
+  {
+   temp = GetNewNode(in_data);
+  }
+  else if( temp->data > in_data)
+  {
+   temp->left = insert(temp->left , in_data);
+  }
+  else
+  {
+   temp->right = insert( temp->right , in_data);
+  }
+  return temp;
+ }
+ 
+ void createBST()
+ {
+  cout<<"ENTER NUMBER OF ELEMENTS IN THE BST : ";
+  cin>>n;
+  for(int i = 0 ; i < n ; i++)
+  {
+   cout<<"NUMBER = ";
+   cin>>x;
+   root = insert(root , x);
+  }
+ }
+ 
+ int search(Bstnode *temp ,int in_data)
+ {
+  if( temp != NULL)
+  {
+   if(temp->data == in_data)
+   {
+    cout<<":-- RECORD FOUND --:"<<endl;
+    return 1;
+   }
+   else if(in_data < temp->data)
+   {
+    this->search(temp->left, in_data);
+   }
+   else if(in_data > temp->data)
+   {
+    this->search(temp->left , in_data);
+   }
+  }
+  else
+  {
+    return 0;
+  }
+ }
+ 
+ 
+ void minvalue(Bstnode *temp)
+ {
+  while(temp->left != NULL)
+  {
+   temp = temp->left;
+  }
+  cout<<"MINIMUM VALUE = "<<temp->data<<endl;
+ }
+   
+ void mirror(Bstnode *temp)
+ {
+  if(temp == NULL)
+  {
+   return;
+  }
+  else
+  {
+   Bstnode *ptr;
+   mirror(temp->left);
+   mirror(temp->right);
+   ptr = temp->left;
+   temp->left = temp->right;
+   temp->right = ptr; 
+  }
+ }
+ 
+ void display()
+ {
+  cout<<endl<<"--- INORDER TRAVERSAL ---"<<endl;
+  inorder(root);
+  cout<<endl;
+ 
+ }
+ 
+ void inorder(Bstnode *temp)
+ {
+  if(temp != NULL)
+  {
+   inorder(temp->left);
+   cout<<temp->data<<"  ";
+   inorder(temp->right);
+  }
+ } 
+ 
+ 
+ 
+ int depth(Bstnode *temp)
+ {
+  if(temp == NULL) 
+   return 0;
+  return (max((depth(temp->left)),(depth(temp->right))) +1);  
+ }
+};
+
+int main()
+{
+ Btree obj;
+ int cho=0,a,e;
+ 
+ while(cho<4)
+ {
+ cout<<endl<<" Enter 1: create BST ";
+ cout<<endl<<" Enter 2: Display tree inorder";
+ cout<<endl<<" Enter 3: search a number ";
+ cout<<endl<<" Enter 4 : Find minimum value ";
+ cout<<endl<<" Enter 5 : ceate a mirror image";
+ cout<<endl<<" Enter 6 : calculate a depth ";
+ cout<<endl<<" Enter your choice ";
+ cin>>cho;
+ switch(cho)
+ {
+ case 1:  obj.createBST();    break;
+ case 2:  obj.display();    break;
+ case 3:   
+            a = 0;
+            cout<<endl<<" Enter element to search";
+            cin>>e;
+            a = obj.search(obj.root,e);
+            if( a == 0)
+            {
+                 cout<<"ELEMENT NOT FOUND"<<endl;
+            }
+            else
+                cout<<"ELEMENT FOUND"<<endl;
+                cout<<endl<<a<<endl;
+            break;
+ case 4:    obj.minvalue(obj.root);    
+            break;
+ case 5:  obj.mirror(obj.root);  obj.inorder(obj.root);  break;
+ case 6:   cout<<endl<<obj.depth(obj.root);   break;
+ }
+ }
+ 
+ 
+ return 0;
+}

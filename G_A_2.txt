@@ -1,0 +1,110 @@
+//Implement all the functions of a dictionary (ADT) using hashing and handle collisions
+using chaining with / without replacement.
+Data: Set of (key, value) pairs, Keys are mapped to values, Keys must be comparable, Keys
+must be unique
+Standard Operations: Insert(key, value), Find(key), Delete(key) //
+// Group A Q2
+#include<iostream>
+using namespace std;
+
+struct node
+{
+   string data;
+   struct node *next;
+};
+ class HashTable
+ {
+struct node *tbl[10],*nw,*t;
+
+public:
+HashTable()
+{
+    for(int i=0; i<10; i++)
+         tbl[i]=NULL; 
+}
+void insertValue()
+{
+  int y,z;
+  string x;
+  cout<<"\n Enter The string :";
+  cin>>x;
+  nw=new (struct node);
+  nw->next=NULL;
+  nw->data=x;
+  y=x[0]%10;
+  if(tbl[y]==NULL)
+     tbl[y]=nw;
+    else
+    {
+	    t=tbl[y];
+      while(t != NULL)
+      {  
+         if(t->next==NULL)
+         {
+            t->next=nw;
+            break;
+         }
+         else
+               t=t->next;
+       }
+     }
+}
+
+void display()
+{
+  cout<<"\n Content Of Hash Table Is:";
+  for(int i=0; i<10; i++)
+  {
+       cout<<i<<" -> ";
+       t=tbl[i];
+       while(t!=NULL)
+       {
+          cout<<t->data<<" -> ";
+          t=t->next;
+       }
+       cout<<"NULL"<<endl;
+   }
+}
+void search()
+{   int flag=0;
+    string k;
+  cout<<"\n Enter string to search: ";
+  cin>>k;
+  int  y=k[0]%10;
+  t=tbl[y];
+       while(t!=NULL )
+       {
+           if(t->data ==k)
+          { cout<<" string is found in dictionary "; flag=1; break; }
+          else
+          t=t->next;
+       }
+       if(flag==0)
+       cout<<endl<<"String is not found";
+   }
+
+};
+int main(){
+         HashTable h;
+         int ch=0;
+         while(ch<4)
+         {
+            cout<<"\n 1: insert String :";
+            cout<<"\n 2: display :";
+            cout<<"\n 3: search :";
+            cout<<"\n 4: Exit";
+            cout<<"\n Enter your choice :";
+            cin>>ch;
+            switch(ch)
+            {
+                 case 1: h.insertValue();
+                         break;
+                 case 2: h.display();
+                         break;
+                 case 3 :
+                        h.search();
+                        break;
+            }
+         }
+         return 0;
+}

@@ -1,0 +1,128 @@
+//Consider telephone book database of N clients. Make use of a hash table implementation
+to quickly look up client‘s telephone number. Make use of two collision handling
+techniques and compare them using number of comparisons required to find a set of
+telephone numbers//
+
+
+
+
+
+// Group A Question 1
+#include <iostream>
+using namespace std;
+// Class to store contact details
+class telebook {
+string name;
+long int tel;
+public:
+telebook()
+{
+tel = 0;
+}
+friend class hashing;
+};
+class hashing {
+telebook data[100]; // Maximum size of directory is
+100
+string nm;
+long int t;
+int index,size;
+public:
+hashing()
+{
+t = 0;
+size=100;
+}
+// This method takes details from the user like Name and
+Telephone number
+// and create new record in the hashtable.
+void create_record()
+{
+cout << "\nEnter name of customer :";
+cin>> nm;
+cout<<endl<<" Enter telephone number (10digit)";
+cin>>t;
+index = t % size;
+// Inserting record using linear probing in case of collision
+for (int j = 0; j < size; j++) {
+if (data[index].tel == 0) {
+data[index].name = nm;
+data[index].tel = t;
+break;
+}
+else
+index = (index + 1) % size;
+}
+}
+// This method takes the key of the record to be searched.
+// Then, it traverses the hash table, if record id matches
+// with the key it displays the record detail.
+void search_record()
+{
+int index1, flag = 0;
+long int key;
+cout << "\n telephone number to search : ";
+cin>> key;
+index1 = key % size;
+// Traversing the directory linearly inorder to search record
+detail
+for (int a = 0; a < size; a++) {
+if (data[index1].tel == key) {
+flag = 1;
+cout << "\nRecord found:";
+cout << "\tNAME ";
+cout << "\t\tTELEPHONE ";
+cout << data[index1].name << " \t" <<
+data[index1].tel;
+break;
+}
+else
+index1 = (index1 + 1) % size;
+}
+if (flag == 0)
+cout << "\n........Record not found";
+}
+// This function is created to display all the record of the diary.
+void display_record()
+{
+cout << "\n\tNAME";
+cout << " \t\tTELEPHONE ";
+// Displaying the details of all records of the directory.
+for (int a = 0; a < size; a++) {
+if (data[a].tel != 0) {
+cout << "\n\t" << data[a].name << " \t" <<
+data[a].tel;
+}
+}
+}
+};
+// Driver code
+int main()
+{
+hashing s; // creating object of hashing class
+int cho=0;
+while(cho<4)
+{
+cout<<endl<<" Enter 1 : Create new Client record ";
+cout<<endl<<"Enter 2 : Display all record";
+cout<<endl<<"Enter 3 : Search ";
+cout<<endl<<" Enter 4: Exit";
+cout<<endl<<" Enter your choice ";
+cin>>cho;
+switch(cho)
+{
+case 1 :
+cout << "\n1.CREATE Record ";
+s.create_record(); break;
+case 2 :
+cout << "\n\n\n\n2.DISPLAY Record ";
+s.display_record();
+break;
+case 3:
+cout << "\n\n\n\n3.SEARCH Record";
+s.search_record();
+break;
+}
+}
+return 0;
+}

@@ -1,0 +1,126 @@
+//Company maintains employee information as employee ID, name, designation and salary.
+Allow user to add, delete information of employee. Display information of particular
+employee. If employee does not exist an appropriate message is displayed. If it is, then
+the system displays the employee details. Use index sequential file to maintain the data. //
+
+
+
+//Group F Q24
+#include<iostream>
+#include<fstream>
+#include<cstring>
+using namespace std;
+class empRec
+ {
+
+ public:
+ int empId, salary;
+ char name[10],design[10];
+ 
+ void accept()
+ {
+  cout<<"\n\tEnter Emp ID : ";
+  cin>>empId;
+  cout<<"\n\tEnter the Name of Emp : ";
+  cin>>name;
+  cout<<"\n\tEnter the Designation :";
+  cin>>design;
+  cout<<"\n\tEnter the salary:";
+  cin>>salary;
+  
+ }
+        
+  void show()
+  {
+
+  cout<<"\n\t"<<empId<<"\t"<<name<<"\t"<<design<<"\t"<<salary;
+  }
+};
+int main()
+{
+ int n,ch,ch1,rec,count;
+ 
+ empRec t1;
+ count=0;
+ fstream g,f;
+ do
+ {
+  cout<<"\n>>>>>>>>>>>>>>>>>>>>>>MENU<<<<<<<<<<<<<<<<<<<<";
+  cout<<"\n1.Add Employee Record";
+  cout<<"\n2.Display All Employee Record";
+  cout<<"\n3.Search Employee";
+  cout<<"\n4.Delete a Employee Record";
+  cout<<"\n5.Exit";
+  cout<<"\n\tEnter the Choice\t:";
+  cin>>ch;
+  switch(ch)
+  {
+  case 1:
+   f.open("EmpRecord.txt",ios::out);
+   x:t1.accept();
+   f.write((char*) &t1,(sizeof(t1)));
+   cout<<"\nDo you want to enter more records?\n1.Yes\n2.No";
+   cin>>ch1;
+    if(ch1==1)
+     goto x;
+    else
+    {
+     f.close();
+     break;
+    }
+
+  case 2:
+   f.open("EmpRecord.txt",ios::in);
+   f.read((char*) &t1,(sizeof(t1)));
+   cout<<"\n\tEmpId\t\tName \t\t Designation \t\t salary";
+   while(f)
+   {
+    t1.show();
+    f.read((char*) &t1,(sizeof(t1)));
+   }
+   f.close();
+   break;
+  
+  case 3:
+   cout<<"\nEnter the emp ID you want to find";
+   cin>>rec;
+   f.open("EmpRecord.txt",ios::in);
+   f.read((char*)&t1,(sizeof(t1)));
+   while(f)
+   {
+    if(rec==t1.empId)
+    {
+        count++;
+     cout<<"\nRecord found";
+      t1.show();
+    } 
+     f.read((char*)&t1,(sizeof(t1)));
+   }
+     
+   if(count==0)
+          cout<<"\nRecord not found";
+   f.close();
+   break;
+
+  case 4:
+      int eid;
+      cout<<"Please Enter the Emp ID. of Employee Whose Info You Want to Delete: ";
+     cin>>eid;
+     f.open("EmpRecord.txt",ios::in);
+     g.open("temp.txt",ios::out);
+     f.read((char *)&t1,sizeof(t1));
+     while(!f.eof())
+     {
+        if (t1.empId != eid)
+           g.write((char *)&t1,sizeof(t1));
+         f.read((char *)&t1,sizeof(t1));
+     }
+    cout << "The record with the roll no. " << eid << " has been deleted " << endl;
+     f.close();
+     g.close();
+     remove("EmpRecord.txt");
+     rename("temp.txt","EmpRecord.txt");
+      break;
+    }
+  }while(ch<5);
+}

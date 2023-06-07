@@ -1,0 +1,129 @@
+//Department maintains a student information. The file contains roll number, name,
+division and address. Allow user to add, delete information of student. Display
+information of particular employee. If record of student does not exist an appropriate
+message is displayed. If it is, then the system displays the student details. Use sequential
+file to main the data. //
+
+
+
+//Group F Q23
+#include<iostream>
+#include<fstream>
+#include<cstring>
+using namespace std;
+class studRec
+ {
+
+ public:
+ int rollNo;
+ char name[10];
+ char div;
+ char address[20];
+ void accept()
+ {
+  cout<<"\n\tEnter Roll Number : ";
+  cin>>rollNo;
+  cout<<"\n\tEnter the Name : ";
+  cin>>name;
+  cout<<"\n\tEnter the Division:";
+  cin>>div;
+  cout<<"\n\tEnter the Address:";
+  cin>>address;
+ }
+        
+        
+        
+  void show()
+  {
+
+  cout<<"\n\t"<<rollNo<<"\t\t"<<name<<"\t\t"<<div<<"\t\t"<<address;
+  }
+};
+int main()
+{
+ int n,ch,ch1,rec,count;
+ 
+ studRec t1;
+ count=0;
+ fstream g,f;
+ do
+ {
+  cout<<"\n>>>>>>>>>>>>>>>>>>>>>>MENU<<<<<<<<<<<<<<<<<<<<";
+  cout<<"\n1.Add Student Record";
+  cout<<"\n2.Display All Student Record";
+  cout<<"\n3.Search Student";
+  cout<<"\n4.Delete a Student Record";
+  cout<<"\n5.Exit";
+  cout<<"\n\tEnter the Choice\t:";
+  cin>>ch;
+  switch(ch)
+  {
+  case 1:
+   f.open("StuRecord.txt",ios::out);
+   x:t1.accept();
+   f.write((char*) &t1,(sizeof(t1)));
+   cout<<"\nDo you want to enter more records?\n1.Yes\n2.No";
+   cin>>ch1;
+    if(ch1==1)
+     goto x;
+    else
+    {
+     f.close();
+     break;
+    }
+
+  case 2:
+   f.open("StuRecord.txt",ios::in);
+   f.read((char*) &t1,(sizeof(t1)));
+   cout<<"\n\tRoll No.\t\tName \t\t Division \t\t Address";
+   while(f)
+   {
+    t1.show();
+    f.read((char*) &t1,(sizeof(t1)));
+   }
+   f.close();
+   break;
+  
+  case 3:
+   cout<<"\nEnter the roll number you want to find";
+   cin>>rec;
+   f.open("StuRecord.txt",ios::in);
+   f.read((char*)&t1,(sizeof(t1)));
+   while(f)
+   {
+    if(rec==t1.rollNo)
+    {
+        count++;
+     cout<<"\nRecord found";
+      t1.show();
+    } 
+     f.read((char*)&t1,(sizeof(t1)));
+   }
+     
+   if(count==0)
+          cout<<"\nRecord not found";
+   f.close();
+   break;
+
+  case 4:
+      int roll;
+      cout<<"Please Enter the Roll No. of Student Whose Info You Want to Delete: ";
+     cin>>roll;
+     f.open("StuRecord.txt",ios::in);
+     g.open("temp.txt",ios::out);
+     f.read((char *)&t1,sizeof(t1));
+     while(!f.eof())
+     {
+        if (t1.rollNo != roll)
+           g.write((char *)&t1,sizeof(t1));
+         f.read((char *)&t1,sizeof(t1));
+     }
+    cout << "The record with the roll no. " << roll << " has been deleted " << endl;
+     f.close();
+     g.close();
+     remove("StuRecord.txt");
+     rename("temp.txt","StuRecord.txt");
+      break;
+    }
+  }while(ch<5);
+}
